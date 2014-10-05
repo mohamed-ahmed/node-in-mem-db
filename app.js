@@ -1,6 +1,7 @@
 var prompt = require('prompt');
 
-var storageObject = {};
+var StorageObject = require("./StorageObject");
+var storageObject = new StorageObject();
 
 //
 // Start the prompt
@@ -23,22 +24,29 @@ function resultCallback(err, result){
 		if(commandArray[1] != null && commandArray[2] != null){
 			var key = commandArray[1];
 			var value = commandArray[2];
-			storageObject[key] = value;
+			storageObject.set(key,value);
 		}
 		console.log(storageObject);
 	}else if(command == "get"){
 		if(commandArray[1] != null){
 			var key = commandArray[1];
-			var value = storageObject[key];
+			var value = storageObject.get(key);
 			console.log(value);
 		}
-	}
 	}else if(command == "unset"){
-			if(commandArray[1] != null){
-				var key = commandArray[1];
-				var value = storageObject[key];
-				console.log(value);
-			}
+		if(commandArray[1] != null){
+			var key = commandArray[1];
+			storageObject.unset(key);
 		}
-		prompt.get(['command'], resultCallback);
+	}
+
+	else if(command == "numeq"){
+		if(commandArray[1] != null){
+			var value = commandArray[1];
+			var numValues = storageObject.getNumEQ(value);
+			console.log(numValues);
+		}
+	}
+
+	prompt.get(['command'], resultCallback);
 }
