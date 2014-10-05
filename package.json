@@ -1,0 +1,9 @@
+{
+	"name" : "node-inmem-db",
+	"description" : "In memory database similar to Redis",
+	"author" : "Mohamed Ahmed",
+	"version" : "0.0.1",
+	"dependencies" : {
+		"prompt" : "0.2.14"
+	}
+}
