@@ -15,50 +15,75 @@ prompt.start();
 
 
 function resultCallback(err, result){
-	//
-	// Log the results.
-	//
+
+
 	var commandArray = result.command.split(" ");
-	var command = commandArray[0];
-	if(command == "set"){
-		if(commandArray[1] != null && commandArray[2] != null){
-			var key = commandArray[1];
-			var value = commandArray[2];
-			storageObject.set(key,value);
+	var command = commandArray[0].toLowerCase();
+	switch(command){
+		case "set" :{
+			if(commandArray[1] != null && commandArray[2] != null){
+				var key = commandArray[1];
+				var value = commandArray[2];
+				storageObject.set(key,value);
+			}
+			break;
 		}
-		console.log(storageObject);
-	}else if(command == "get"){
-		if(commandArray[1] != null){
-			var key = commandArray[1];
-			var value = storageObject.get(key);
-			console.log(value);
-		}
-	}else if(command == "unset"){
-		if(commandArray[1] != null){
-			var key = commandArray[1];
-			storageObject.unset(key);
-		}
-	}
 
-	else if(command == "numeq"){
-		if(commandArray[1] != null){
-			var value = commandArray[1];
-			var numValues = storageObject.getNumEQ(value);
-			console.log(numValues);
+		case "get":{
+			if(commandArray[1] != null){
+				var key = commandArray[1];
+				var value = storageObject.get(key);
+				if(value === undefined){
+					value = "NULL";
+				}
+				console.log(value);
+			}
+			break;
 		}
-	}
-	else if(command == "begin"){
-		storageObject.begin();
-	}
-	else if(command == "rollback"){
-		if(!storageObject.rollback()){
-			console.log("no transaction");
+		case "unset": {
+			if(commandArray[1] != null){
+				var key = commandArray[1];
+				storageObject.unset(key);
+			}
+			break;
 		}
-	}
-	else if(command == "commit"){
-		storageObject.commit();
-	}
 
+		case "numequalto":{
+			if(commandArray[1] != null){
+				var value = commandArray[1];
+				var numValues = storageObject.getNumEQ(value);
+				if(numValues === undefined){
+					numValues = 0;
+				}
+				console.log(numValues);
+			}
+			break;
+		}
+		case "begin":{
+			storageObject.begin();
+			break;
+		}
+		case "rollback":{
+			if(!storageObject.rollback()){
+				console.log("NO TRANSACTION");
+			}
+			break;
+		}
+		case "commit": {
+			if(!storageObject.commit()){
+				console.log("NO TRANSACTION");
+			}
+			break;
+		}
+		case "end" :{
+			process.exit();
+			break;
+		}
+			default:{
+			console.log("invalid command");
+		}
+
+	}
 
 
 	prompt.get(['command'], resultCallback);

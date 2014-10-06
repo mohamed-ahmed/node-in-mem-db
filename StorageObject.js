@@ -48,12 +48,19 @@ StorageObject.prototype.getNumEQ = function(value){
 	return this.currentState.valueCount[value];
 }
 
+/*
+pushed previous state onto stack
+creates new currents state which contains values of previous state
+*/
 StorageObject.prototype.begin = function(){
 	var newState = clone(this.currentState);
 	this.stack.push(this.currentState);
 	this.currentState = newState;
 }
 
+/*
+	sets storage back in previous state, can be optimized to store state per variable
+*/
 StorageObject.prototype.rollback = function(){
 	if(this.stack.isEmpty()){
 		return false;
@@ -62,8 +69,19 @@ StorageObject.prototype.rollback = function(){
 	return true;
 }
 
+/*
+contradictory instructions for commit,
+isntructions say to print no transaction when it fails but they also say
+"Any data command that is run outside of a transaction block should commit immediately",
+how how can it fail. This function assumes anything not in a "begin" block will just be committed and "no transaction"
+will be printed
+*/
 StorageObject.prototype.commit  = function(){
+	if(this.stack.isEmpty()){
+		return false;
+	}
 	this.stack = new Stack();
+	return true;
 }
 
 StorageObject.prototype.reduceValueCount = function(value){
@@ -75,6 +93,9 @@ StorageObject.prototype.reduceValueCount = function(value){
 	}
 }
 
+/*
+solution to copying current state such that states won't be modified through object references
+*/
 function clone(obj){
 	return JSON.parse( JSON.stringify( obj ) );
 }
