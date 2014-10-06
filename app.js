@@ -47,6 +47,19 @@ function resultCallback(err, result){
 			console.log(numValues);
 		}
 	}
+	else if(command == "begin"){
+		storageObject.begin();
+	}
+	else if(command == "rollback"){
+		if(!storageObject.rollback()){
+			console.log("no transaction");
+		}
+	}
+	else if(command == "commit"){
+		storageObject.commit();
+	}
+
+
 
 	prompt.get(['command'], resultCallback);
 }
